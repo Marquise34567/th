@@ -14,8 +14,9 @@ export interface AuthUser {
  */
 export async function checkAuth(): Promise<AuthUser | null> {
   try {
+    const API = process.env.NEXT_PUBLIC_API_URL;
     console.log('[auth:checkAuth] Calling /api/auth/me with credentials:include...');
-    const response = await fetch('/api/auth/me', {
+    const response = await fetch(`${API}/auth/me`, {
       credentials: 'include',
     });
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+const API = process.env.NEXT_PUBLIC_API_URL;
 import Link from 'next/link';
 
 interface User {
@@ -15,7 +16,7 @@ export function UserNav() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch('/api/auth/me');
+        const res = await fetch(`${API}/auth/me`);
         if (res.ok) {
           const data = await res.json();
           if (data.user) {
@@ -48,7 +49,7 @@ export function UserNav() {
         <button
           onClick={async () => {
             try {
-              const res = await fetch('/api/auth/logout', { method: 'POST' });
+              const res = await fetch(`${API}/auth/logout`, { method: 'POST' });
               if (res.ok) {
                 window.location.href = '/';
               }

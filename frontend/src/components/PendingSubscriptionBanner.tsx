@@ -27,7 +27,8 @@ export function PendingSubscriptionBanner() {
     }
 
     // Check billing status API for pending verification
-    fetch('/api/billing/status')
+    const API = process.env.NEXT_PUBLIC_API_URL;
+    fetch(`${API}/billing/status`)
       .then(res => res.json())
       .then(data => {
         if (data.ok && data.isPending) {

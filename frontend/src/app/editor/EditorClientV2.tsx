@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+const API = process.env.NEXT_PUBLIC_API_URL;
 import EditorShell from '@/components/editor-v2/EditorShell'
 import AnalysisCard from '@/components/editor-v2/AnalysisCard'
 import ClipRow from '@/components/editor-v2/ClipRow'
@@ -45,7 +46,7 @@ export default function EditorClientV2() {
     const currentUser = auth.currentUser
     if (!currentUser) throw new Error('Not signed in')
     const idToken = await currentUser.getIdToken(true)
-    const resp = await fetch('/api/video/download', {
+    const resp = await fetch(`${API}/video/download`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
       body: JSON.stringify({ jobId }),
@@ -166,7 +167,7 @@ export default function EditorClientV2() {
 
       setStatus('analyzing')
       setOverallProgress(0.25)
-      const createResp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`, {
+      const createResp = await fetch(`${API}/jobs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
         body: JSON.stringify({ path: storagePath }),

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useContext, createContext } from 'react';
+const API = process.env.NEXT_PUBLIC_API_URL;
 import type { User } from './types';
 
 interface AuthContextType {
@@ -24,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch('/api/auth/me');
+        const res = await fetch(`${API}/auth/me`);
         if (res.ok) {
           const data = await res.json();
           if (data.user) {
@@ -45,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
     try {
       // Use server-side auth endpoints which create a session cookie
-      const resp = await fetch('/api/auth/login', {
+      const resp = await fetch(`${API}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -57,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Confirm server session via /api/auth/me
       try {
-        const r = await fetch('/api/auth/me')
+        const r = await fetch(`${API}/auth/me`)
         const j = await r.json().catch(() => null)
         if (j?.user) setUser(j.user)
       } catch {}
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email: string, password: string, confirmPassword: string) => {
       setError(null);
       try {
-        const resp = await fetch('/api/auth/signup', {
+        const resp = await fetch(`${API}/auth/signup`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, confirmPassword }),
@@ -100,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(async () => {
     setError(null);
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      await fetch(`${API}/auth/logout`, { method: 'POST' });
       setUser(null);
       // Redirect to home
       window.location.href = '/';

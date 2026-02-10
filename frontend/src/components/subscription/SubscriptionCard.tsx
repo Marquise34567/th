@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
+const API = process.env.NEXT_PUBLIC_API_URL;
 import { auth } from '@/lib/firebase.client'
 import { getRendersLeft, planFeatures } from '@/lib/plans'
 
@@ -22,7 +23,7 @@ export default function SubscriptionCard({ user }:{ user: any }){
   const handleSignOut = async () => {
     setLoading(true)
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
+      await fetch(`${API}/auth/logout`, { method: 'POST' })
     } catch (e) {
       // proceed to redirect regardless
     } finally {
@@ -40,7 +41,7 @@ export default function SubscriptionCard({ user }:{ user: any }){
       }
       const idToken = await user.getIdToken()
 
-      const res = await fetch('/api/stripe/checkout', {
+      const res = await fetch(`${API}/stripe/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
         body: JSON.stringify({ plan: 'starter', trial: true })
@@ -127,7 +128,7 @@ export default function SubscriptionCard({ user }:{ user: any }){
             <a href="/pricing" className="col-span-2 mt-2 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-2xl bg-white/4 text-white font-semibold">See pricing</a>
           </>
         ) : (
-          <form method="post" action="/api/billing/portal" className="col-span-2">
+          <form method="post" action={`${API}/billing/portal`} className="col-span-2">
             <input type="hidden" name="uid" value={user?.uid} />
             <button type="submit" className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-2xl bg-white/6 text-white font-medium">Manage billing</button>
           </form>

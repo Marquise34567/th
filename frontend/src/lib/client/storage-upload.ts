@@ -23,8 +23,9 @@ export async function uploadVideoToStorage(
   console.log(`[storage-upload] Uploading file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`)
 
   // Step 1: Get the signed upload URL from the server
+  const API = process.env.NEXT_PUBLIC_API_URL;
   console.log(`[storage-upload] Requesting signed URL from /api/upload-url...`)
-  const uploadUrlResponse = await fetch('/api/upload-url', {
+  const uploadUrlResponse = await fetch(`${API}/upload-url`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

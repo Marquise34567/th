@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import { trackPostHogEvent, trackPlausibleEvent } from '@/lib/analytics/client';
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 interface BillingStatus {
   plan: string;
@@ -39,7 +40,7 @@ export default function BillingSuccessPage() {
         console.log('[billing-success] Listening for Firestore user update for session:', sessionId)
 
         // We expect Stripe webhook to write users/{uid} doc. To map session -> uid, we can fetch the session from Stripe using a server endpoint.
-        const resp = await fetch(`/api/stripe/session?session_id=${encodeURIComponent(sessionId)}`)
+        const resp = await fetch(`${API}/stripe/session?session_id=${encodeURIComponent(sessionId)}`)
         const json = await resp.json()
         if (!resp.ok) throw new Error(json.error || 'Failed to lookup session')
         const uid = json.uid
@@ -91,7 +92,7 @@ export default function BillingSuccessPage() {
     try {
       if (!sessionId) return
       // Re-check session -> uid and fetch the user doc once
-      const resp = await fetch(`/api/stripe/session?session_id=${encodeURIComponent(sessionId)}`)
+      const resp = await fetch(`${API}/stripe/session?session_id=${encodeURIComponent(sessionId)}`)
       const json = await resp.json()
       if (!resp.ok) throw new Error(json.error || 'Failed to lookup session')
       const uid = json.uid

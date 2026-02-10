@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+const API = process.env.NEXT_PUBLIC_API_URL;
 import { useRouter } from 'next/navigation';
 
 interface ProtectedRouteProps {
@@ -15,7 +16,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch('/api/auth/me');
+        const res = await fetch(`${API}/auth/me`);
         if (!res.ok) {
           router.push('/login');
           return;

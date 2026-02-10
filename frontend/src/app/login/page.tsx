@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
+const API = process.env.NEXT_PUBLIC_API_URL;
 import { MobileNav } from '@/components/MobileNav';
 import { UserNav } from '@/components/UserNav';
 // Note: Using server-backed session endpoints (Firebase) for auth
@@ -32,7 +33,7 @@ function AuthPageContent() {
     const checkSession = async () => {
       try {
         console.log('[login] Checking existing session via /api/auth/me...');
-        const resp = await fetch('/api/auth/me', { method: 'GET' })
+        const resp = await fetch(`${API}/auth/me`, { method: 'GET' })
         const json = await resp.json().catch(() => null)
         if (resp.ok && json?.success && json.user) {
           console.log('[login] Active session found:', json.user.email)
@@ -93,7 +94,7 @@ function AuthPageContent() {
             const user = cred.user
             const idToken = await user.getIdToken()
 
-            const resp = await fetch('/api/auth/login', {
+            const resp = await fetch(`${API}/auth/login`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ idToken }),
@@ -148,7 +149,7 @@ function AuthPageContent() {
 
         // Sign up via server Firebase endpoint
         try {
-          const resp = await fetch('/api/auth/signup', {
+          const resp = await fetch(`${API}/auth/signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, confirmPassword }),
@@ -171,7 +172,7 @@ function AuthPageContent() {
           const confirm = async () => {
             for (let i = 0; i < 6; i++) {
               try {
-                const r = await fetch('/api/auth/me');
+                const r = await fetch(`${API}/auth/me`);
                 if (r.ok) {
                   const j = await r.json().catch(() => null);
                   if (j?.success && j.user) return true;
@@ -188,7 +189,7 @@ function AuthPageContent() {
             const confirm = async () => {
               for (let i = 0; i < 6; i++) {
                 try {
-                  const r = await fetch('/api/auth/me');
+                  const r = await fetch(`${API}/auth/me`);
                   if (r.ok) {
                     const j = await r.json().catch(() => null);
                     if (j?.success && j.user) return true;

@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
+const API = process.env.NEXT_PUBLIC_API_URL;
 import { PLANS, type PlanId } from '@/config/plans';
 import { validateReturnTo } from '@/lib/client/returnTo';
 
@@ -28,7 +29,7 @@ function CheckoutContent() {
     setError(null);
 
     try {
-      const response = await fetch('/api/billing/checkout', {
+      const response = await fetch(`${API}/billing/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PLANS, getAnnualDiscount, formatPrice, getMonthlyEquivalent, type PlanId } from '@/config/plans';
 import { Logo } from '@/components/Logo';
+const API = process.env.NEXT_PUBLIC_API_URL;
 import { BetaBadge } from '@/components/BetaBadge';
 import { MobileNav } from '@/components/MobileNav';
 import { UserNav } from '@/components/UserNav';
@@ -63,7 +64,7 @@ function PricingPageContent() {
 
       // Call Stripe checkout endpoint (send Firebase ID token)
       const idToken = await fbUser.getIdToken(true);
-      const response = await fetch('/api/stripe/checkout', {
+      const response = await fetch(`${API}/stripe/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
         body: JSON.stringify({ plan: String(planId).toLowerCase(), interval: billingPeriod }),
@@ -123,7 +124,7 @@ function PricingPageContent() {
 
       // Call checkout endpoint with trial flag (backend may honour trial param)
       const idToken = await fbUser.getIdToken(true);
-      const response = await fetch('/api/stripe/checkout', {
+      const response = await fetch(`${API}/stripe/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
         body: JSON.stringify({ plan: String(planId).toLowerCase(), trial: true, interval: billingPeriod }),
