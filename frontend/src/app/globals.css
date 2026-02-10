@@ -1,6 +1,11 @@
 @import "tailwindcss/preflight";
 @tailwind utilities;
 
+/* ensure components layer exists for Tailwind v4 compatibility */
+@layer components {
+  /* placeholder to keep component classes from being pruned if used dynamically */
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
