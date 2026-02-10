@@ -1,5 +1,3 @@
-import { adminAuth } from '@/lib/firebaseAdmin'
-
 function parseCookies(cookieHeader: string | null) {
   const out: Record<string,string> = {}
   if (!cookieHeader) return out
@@ -15,6 +13,7 @@ function parseCookies(cookieHeader: string | null) {
 }
 
 export async function requireAuth(request: Request, opts?: { allowQueryTokenInDev?: boolean }) {
+  const API = process.env.NEXT_PUBLIC_API_URL || ''
   const authHeader = request.headers.get('authorization') || ''
   let token: string | null = null
   if (authHeader.toLowerCase().startsWith('bearer ')) token = authHeader.slice(7).trim()
@@ -38,9 +37,18 @@ export async function requireAuth(request: Request, opts?: { allowQueryTokenInDe
     throw new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
   }
 
+  // Proxy token verification to external backend so frontend does not require firebase-admin.
   try {
-    const decoded = await adminAuth.verifyIdToken(token)
-    return { uid: decoded.uid }
+    const res = await fetch(`${API}/api/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    })
+    if (!res.ok) throw new Error('Unauthorized')
+    const data = await res.json()
+    // backend should return { uid }
+    return { uid: data.uid }
   } catch (e) {
     throw new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
   }
