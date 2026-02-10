@@ -1,10 +1,10 @@
 import path from "path";
 import { promises as fs } from "fs";
-import { resolveFfmpegPath } from "@/lib/ffmpeg/resolve";
-import { runCommand } from "@/lib/server/exec";
-import { getVideoMetadata } from "@/lib/server/ffprobe";
-import type { VideoMetadata } from "@/lib/server/ffprobe";
-import { ManualFacecamCrop } from "@/lib/types";
+import { resolveFfmpegPath } from "../ffmpeg/resolve";
+import { runCommand } from "../server/exec";
+import { getVideoMetadata } from "../server/ffprobe";
+import type { VideoMetadata } from "../server/ffprobe";
+import { ManualFacecamCrop } from "../types";
 
 export type RenderOptions = {
   inputPath: string;
