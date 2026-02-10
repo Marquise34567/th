@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "auto-editor-frontend": "file:.."
+  }
+}
