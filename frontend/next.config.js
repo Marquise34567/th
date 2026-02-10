@@ -2,8 +2,7 @@ const webpack = require('webpack');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	// provide a minimal turbopack config to avoid forcing `--webpack` during builds
-	turbopack: {},
+	// (removed Turbopack runtime flag — use stable Webpack/TSC path)
 	// allow Next.js to build even if TypeScript type-check errors exist during CI
 	typescript: {
 		ignoreBuildErrors: true,
